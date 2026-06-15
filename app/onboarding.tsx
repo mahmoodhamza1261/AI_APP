@@ -56,7 +56,7 @@ export default function OnboardingScreen() {
         />
         <Text style={styles.title}>Create Your Account</Text>
         <Text style={styles.subtitle}>
-          Enter your details to get started with ABS World Wide
+          Enter your details to get started with ABS World Wide (Pvt) Ltd
         </Text>
       </View>
 

@@ -130,7 +130,7 @@ export default function PaymentDetailsScreen() {
       <View style={styles.infoNote}>
         <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
         <Text style={styles.infoText}>
-          This payment will be recorded on your ABS World Wide account and synced
+          This payment will be recorded on your ABS World Wide (Pvt) Ltd account and synced
           with the website automatically.
         </Text>
       </View>

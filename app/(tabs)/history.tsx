@@ -20,7 +20,7 @@ export default function HistoryScreen() {
     <ScreenContainer>
       <Text style={styles.title}>Payment History</Text>
       <Text style={styles.subtitle}>
-        All your transactions, synced with your ABS World Wide account
+        All your transactions, synced with your ABS World Wide (Pvt) Ltd account
       </Text>
 
       {paymentHistory.length === 0 ? (

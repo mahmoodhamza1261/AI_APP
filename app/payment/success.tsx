@@ -21,7 +21,7 @@ export default function PaymentSuccessScreen() {
 
         <Text style={styles.title}>Payment Successful</Text>
         <Text style={styles.subtitle}>
-          Your payment has been received and recorded against your ABS World Wide
+          Your payment has been received and recorded against your ABS World Wide (Pvt) Ltd
           account.
         </Text>
 

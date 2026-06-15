@@ -65,7 +65,7 @@ export default function PaymentReviewScreen() {
         <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
         <Text style={styles.infoText}>
           Once confirmed, your payment status will be visible both in this app and
-          on the ABS World Wide website under your account.
+          on the ABS World Wide (Pvt) Ltd website under your account.
         </Text>
       </View>
 

@@ -23,7 +23,7 @@ export default function WelcomeScreen() {
             />
           </View>
 
-          <Text style={styles.title}>ABS World Wide</Text>
+          <Text style={styles.title}>ABS World Wide (Pvt) Ltd</Text>
           <Text style={styles.tagline}>One Stop Hub for Diverse Expertise</Text>
 
           <View style={styles.featureList}>
@@ -40,7 +40,7 @@ export default function WelcomeScreen() {
             onPress={() => router.push('/onboarding')}
           />
           <Text style={styles.footerNote}>
-            By continuing you agree to ABS World Wide's Terms & Privacy Policy
+            By continuing you agree to ABS World Wide (Pvt) Ltd's Terms & Privacy Policy
           </Text>
         </View>
       </SafeAreaView>

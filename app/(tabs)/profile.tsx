@@ -49,7 +49,7 @@ export default function ProfileScreen() {
         <Divider />
         <MenuRow icon="help-circle-outline" label="Help & Support" />
         <Divider />
-        <MenuRow icon="information-circle-outline" label="About ABS World Wide" />
+        <MenuRow icon="information-circle-outline" label="About ABS World Wide (Pvt) Ltd" />
       </Card>
 
       <Pressable style={styles.logoutButton} onPress={handleLogout}>

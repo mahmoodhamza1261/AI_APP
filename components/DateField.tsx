@@ -25,9 +25,13 @@ export function DateField({
 }: DateFieldProps) {
   const [showPicker, setShowPicker] = useState(false);
 
-  const handleChange = (_event: any, selectedDate?: Date) => {
+  const handleValueChange = (_event: unknown, selectedDate: Date) => {
     if (Platform.OS === 'android') setShowPicker(false);
-    if (selectedDate) onChange(selectedDate);
+    onChange(selectedDate);
+  };
+
+  const handleDismiss = () => {
+    setShowPicker(false);
   };
 
   return (
@@ -50,7 +54,8 @@ export function DateField({
           mode="date"
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           maximumDate={maximumDate}
-          onChange={handleChange}
+          onValueChange={handleValueChange}
+          onDismiss={handleDismiss}
         />
       )}
 

@@ -21,7 +21,7 @@ export default function ServicesScreen() {
     <ScreenContainer>
       <Text style={styles.title}>Our Services</Text>
       <Text style={styles.subtitle}>
-        Explore ABS World Wide's full range of business solutions
+        Explore ABS World Wide (Pvt) Ltd's full range of business solutions
       </Text>
 
       {services.map((s) => (
