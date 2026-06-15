@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Card } from '../../components/Card';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { useAppContext } from '../../context/AppContext';
@@ -47,7 +47,11 @@ export default function HomeScreen() {
       </LinearGradient>
 
       <Text style={styles.sectionTitle}>Pay With</Text>
-      <View style={styles.methodsRow}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.methodsRow}
+      >
         {paymentMethods.map((m) => (
           <View key={m.id} style={styles.methodChip}>
             <View style={[styles.methodIcon, { backgroundColor: `${m.color}1A` }]}>
@@ -58,7 +62,7 @@ export default function HomeScreen() {
             </Text>
           </View>
         ))}
-      </View>
+      </ScrollView>
 
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.sectionTitle}>Recent Activity</Text>
@@ -197,8 +201,9 @@ const styles = StyleSheet.create({
   },
   methodsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: spacing.md,
     marginBottom: spacing.xl,
+    paddingRight: spacing.md,
   },
   methodChip: {
     alignItems: 'center',
