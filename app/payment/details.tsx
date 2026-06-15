@@ -20,20 +20,25 @@ export default function PaymentDetailsScreen() {
   const [extra, setExtra] = useState({ expiry: '', cvv: '' });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const isWallet = method?.id === 'easypaisa' || method?.id === 'jazzcash';
   const isCard = method?.id === 'card';
   const isBank = method?.id === 'bank';
+  const isRaast = method?.id === 'raast';
+  const hasNoAccountField = method?.id === 'qr' || method?.id === 'counter';
 
   const accountLabel = isBank
     ? 'Bank Account / IBAN Number'
     : isCard
     ? 'Card Number'
+    : isRaast
+    ? 'CNIC or Mobile Number (Raast ID)'
     : 'Mobile Number';
 
   const accountPlaceholder = isBank
     ? 'PK00 BANK 0000 0000 0000 0000'
     : isCard
     ? '4242 4242 4242 4242'
+    : isRaast
+    ? '42101-1234567-1 or 03XX-XXXXXXX'
     : '03XX-XXXXXXX';
 
   const handleNext = () => {
@@ -42,7 +47,7 @@ export default function PaymentDetailsScreen() {
     if (!amount.trim() || isNaN(Number(amount.replace(/,/g, '')))) {
       newErrors.amount = 'Enter a valid amount';
     }
-    if (!accountDetail.trim()) {
+    if (!hasNoAccountField && !accountDetail.trim()) {
       newErrors.accountDetail = `Please enter your ${accountLabel.toLowerCase()}`;
     }
     if (isCard) {
@@ -83,21 +88,36 @@ export default function PaymentDetailsScreen() {
         leftIcon={<Text style={styles.currencyPrefix}>Rs</Text>}
       />
 
-      <TextField
-        label={accountLabel}
-        placeholder={accountPlaceholder}
-        value={accountDetail}
-        onChangeText={setAccountDetail}
-        error={errors.accountDetail}
-        keyboardType={isBank || isCard ? 'default' : 'phone-pad'}
-        leftIcon={
+      {hasNoAccountField ? (
+        <View style={styles.infoNote}>
           <Ionicons
-            name={isBank ? 'business-outline' : isCard ? 'card-outline' : 'call-outline'}
+            name={method?.id === 'qr' ? 'qr-code-outline' : 'storefront-outline'}
             size={18}
-            color={colors.textMuted}
+            color={colors.primary}
           />
-        }
-      />
+          <Text style={styles.infoText}>
+            {method?.id === 'qr'
+              ? 'A QR code will be generated after you confirm. Scan it with any banking or wallet app to complete the payment.'
+              : 'A cash payment voucher will be generated after you confirm. Take it to any Easypaisa shop or UBL branch to complete the payment.'}
+          </Text>
+        </View>
+      ) : (
+        <TextField
+          label={accountLabel}
+          placeholder={accountPlaceholder}
+          value={accountDetail}
+          onChangeText={setAccountDetail}
+          error={errors.accountDetail}
+          keyboardType={isBank || isCard ? 'default' : 'phone-pad'}
+          leftIcon={
+            <Ionicons
+              name={isBank ? 'business-outline' : isCard ? 'card-outline' : isRaast ? 'flash-outline' : 'call-outline'}
+              size={18}
+              color={colors.textMuted}
+            />
+          }
+        />
+      )}
 
       {isCard && (
         <View style={styles.row}>

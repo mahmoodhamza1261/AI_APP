@@ -41,6 +41,27 @@ export const paymentMethods: PaymentMethodMeta[] = [
     icon: 'card-outline',
     color: '#6C63FF',
   },
+  {
+    id: 'qr',
+    label: 'QR Payment',
+    description: 'Scan QR code with any banking or wallet app',
+    icon: 'qr-code-outline',
+    color: '#0A8F5B',
+  },
+  {
+    id: 'raast',
+    label: 'Raast (Instant Payment)',
+    description: 'Pay instantly using your CNIC or mobile number',
+    icon: 'flash-outline',
+    color: '#00A859',
+  },
+  {
+    id: 'counter',
+    label: 'Over the Counter',
+    description: 'Pay cash at any Easypaisa shop or UBL branch',
+    icon: 'storefront-outline',
+    color: '#E67E22',
+  },
 ];
 
 export interface ServiceItem {

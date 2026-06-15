@@ -49,11 +49,15 @@ export default function PaymentReviewScreen() {
         <Divider />
         <DetailRow label="Payment Method" value={method?.label ?? '—'} />
         <Divider />
-        <DetailRow
-          label={method?.id === 'bank' ? 'Account / IBAN' : method?.id === 'card' ? 'Card Number' : 'Mobile Number'}
-          value={maskAccount(pendingPayment.accountDetail, method?.id)}
-        />
-        <Divider />
+        {accountDetailLabel(method?.id) && (
+          <>
+            <DetailRow
+              label={accountDetailLabel(method?.id) as string}
+              value={maskAccount(pendingPayment.accountDetail, method?.id)}
+            />
+            <Divider />
+          </>
+        )}
         <DetailRow label="Payer Name" value={profile?.fullName ?? '—'} />
         <Divider />
         <DetailRow label="CNIC" value={profile?.cnic ?? '—'} />
@@ -77,6 +81,22 @@ export default function PaymentReviewScreen() {
       />
     </ScreenContainer>
   );
+}
+
+function accountDetailLabel(methodId?: string) {
+  switch (methodId) {
+    case 'bank':
+      return 'Account / IBAN';
+    case 'card':
+      return 'Card Number';
+    case 'raast':
+      return 'Raast ID (CNIC / Mobile)';
+    case 'qr':
+    case 'counter':
+      return null;
+    default:
+      return 'Mobile Number';
+  }
 }
 
 function maskAccount(value: string, methodId?: string) {

@@ -1,6 +1,13 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type PaymentMethodId = 'bank' | 'easypaisa' | 'jazzcash' | 'card';
+export type PaymentMethodId =
+  | 'bank'
+  | 'easypaisa'
+  | 'jazzcash'
+  | 'card'
+  | 'qr'
+  | 'raast'
+  | 'counter';
 
 export interface UserProfile {
   fullName: string;
