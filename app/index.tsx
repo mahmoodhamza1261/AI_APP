@@ -27,9 +27,10 @@ export default function WelcomeScreen() {
           <Text style={styles.tagline}>One Stop Hub for Diverse Expertise</Text>
 
           <View style={styles.featureList}>
-            <Feature text="Manage your account & service requests" />
-            <Feature text="Pay securely via bank, Easypaisa or JazzCash" />
-            <Feature text="Track your payment history anytime" />
+            <Feature text="Process your payment through ABS Service" />
+            <Feature text="Pay securely via banks, all microfinance banks, Easypaisa & JazzCash including IBFT facility powered by 1 Link." />
+            <Feature text="Client can pay cash on counter in all over Pakistan at UBL" />
+            <Feature text="Breaking Barriers, Building Financial Bridges, Empowering Pakistan." />
           </View>
         </View>
 
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
   },
   featureRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: spacing.sm,
   },
   dot: {
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: colors.accent,
+    marginTop: 6,
   },
   featureText: {
     ...typography.body,
