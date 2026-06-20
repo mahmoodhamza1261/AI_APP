@@ -24,7 +24,7 @@ export default function PaymentReviewScreen() {
         id,
         service: pendingPayment.service || 'General Payment',
         amount: pendingPayment.amount,
-        method: pendingPayment.method ?? 'bank',
+        method: pendingPayment.method ?? 'abs-api',
         date: new Date().toISOString().split('T')[0],
         status: 'success',
         reference: id,
@@ -48,16 +48,23 @@ export default function PaymentReviewScreen() {
         <DetailRow label="Service" value={pendingPayment.service || 'General Payment'} />
         <Divider />
         <DetailRow label="Payment Method" value={method?.label ?? '—'} />
-        <Divider />
-        {accountDetailLabel(method?.id) && (
+        {(method?.id === 'abs-api' || method?.id === 'create-wallet') && (
           <>
-            <DetailRow
-              label={accountDetailLabel(method?.id) as string}
-              value={maskAccount(pendingPayment.accountDetail, method?.id)}
-            />
             <Divider />
+            <DetailRow label="Full Name" value={pendingPayment.extraDetails?.name ?? '—'} />
+            <Divider />
+            <DetailRow label="ID Card No" value={pendingPayment.extraDetails?.idCard ?? '—'} />
+            <Divider />
+            <DetailRow label="Telephone No" value={pendingPayment.extraDetails?.phone ?? '—'} />
           </>
         )}
+        {method?.id === 'bank-transfer' && pendingPayment.accountDetail && (
+          <>
+            <Divider />
+            <DetailRow label="Bank / Wallet" value={pendingPayment.accountDetail} />
+          </>
+        )}
+        <Divider />
         <DetailRow label="Payer Name" value={profile?.fullName ?? '—'} />
         <Divider />
         <DetailRow label="CNIC" value={profile?.cnic ?? '—'} />
@@ -81,31 +88,6 @@ export default function PaymentReviewScreen() {
       />
     </ScreenContainer>
   );
-}
-
-function accountDetailLabel(methodId?: string) {
-  switch (methodId) {
-    case 'bank':
-      return 'Account / IBAN';
-    case 'card':
-      return 'Card Number';
-    case 'raast':
-      return 'Raast ID (CNIC / Mobile)';
-    case 'qr':
-    case 'counter':
-      return null;
-    default:
-      return 'Mobile Number';
-  }
-}
-
-function maskAccount(value: string, methodId?: string) {
-  if (!value) return '—';
-  if (methodId === 'card') {
-    const digits = value.replace(/\s/g, '');
-    return `**** **** **** ${digits.slice(-4)}`;
-  }
-  return value;
 }
 
 function DetailRow({ label, value }: { label: string; value: string }) {

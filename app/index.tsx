@@ -24,13 +24,12 @@ export default function WelcomeScreen() {
           </View>
 
           <Text style={styles.title}>ABS World Wide (Pvt) Ltd</Text>
-          <Text style={styles.tagline}>One Stop Hub for Diverse Expertise</Text>
+          <Text style={styles.tagline}>Breaking Barriers, Building Financial Bridges, Empowering Pakistan.</Text>
 
           <View style={styles.featureList}>
-            <Feature text="Process your payment through ABS Service" />
-            <Feature text="Pay securely via banks, all microfinance banks, Easypaisa & JazzCash including IBFT facility powered by 1 Link." />
-            <Feature text="Client can pay cash on counter in all over Pakistan at UBL" />
-            <Feature text="Breaking Barriers, Building Financial Bridges, Empowering Pakistan." />
+            <Feature text="Make your payments through ABS." />
+            <Feature text="Pay securely via banks, digital wallets and all other platforms including IBFT facility." />
+            <Feature text="Clients can pay cash on UBL counters all over Pakistan." />
           </View>
         </View>
 

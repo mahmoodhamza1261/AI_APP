@@ -14,54 +14,64 @@ export interface PaymentMethodMeta {
 
 export const paymentMethods: PaymentMethodMeta[] = [
   {
-    id: 'bank',
-    label: 'Bank Account',
-    description: 'Direct transfer from your bank account',
-    icon: 'business-outline',
+    id: 'abs-api',
+    label: 'ABS Payment',
+    description: 'Pay directly through ABS secure portal',
+    icon: 'globe-outline',
     color: '#0A2540',
   },
   {
-    id: 'easypaisa',
-    label: 'Easypaisa',
-    description: 'Pay using your Easypaisa wallet',
-    icon: 'wallet-outline',
-    color: '#1C9A45',
-  },
-  {
-    id: 'jazzcash',
-    label: 'JazzCash',
-    description: 'Pay using your JazzCash wallet',
-    icon: 'phone-portrait-outline',
-    color: '#D8232A',
-  },
-  {
-    id: 'card',
-    label: 'Debit / Credit Card',
-    description: 'Visa, Mastercard or UnionPay',
-    icon: 'card-outline',
-    color: '#6C63FF',
+    id: 'bank-transfer',
+    label: 'Bank Transfer',
+    description: 'Pay via any bank account or digital wallet',
+    icon: 'swap-horizontal-outline',
+    color: '#1565C0',
   },
   {
     id: 'qr',
-    label: 'QR Payment',
+    label: 'QR Code',
     description: 'Scan QR code with any banking or wallet app',
     icon: 'qr-code-outline',
     color: '#0A8F5B',
   },
   {
-    id: 'raast',
-    label: 'Raast (Instant Payment)',
-    description: 'Pay instantly using your CNIC or mobile number',
-    icon: 'flash-outline',
-    color: '#00A859',
+    id: 'create-wallet',
+    label: 'ABS Wallet',
+    description: 'Create your ABS digital wallet to pay instantly',
+    icon: 'wallet-outline',
+    color: '#6C63FF',
   },
-  {
-    id: 'counter',
-    label: 'Over the Counter',
-    description: 'Pay cash at any Easypaisa shop or UBL branch',
-    icon: 'storefront-outline',
-    color: '#E67E22',
-  },
+];
+
+export interface BankOption {
+  id: string;
+  name: string;
+  icon: IconName;
+  color: string;
+}
+
+export const banks: BankOption[] = [
+  { id: 'meezan', name: 'Meezan Bank', icon: 'business-outline', color: '#1B6B3A' },
+  { id: 'hbl', name: 'HBL (Habib Bank)', icon: 'business-outline', color: '#CE1126' },
+  { id: 'ubl', name: 'UBL (United Bank)', icon: 'business-outline', color: '#0067B1' },
+  { id: 'allied', name: 'Allied Bank', icon: 'business-outline', color: '#EE2D23' },
+  { id: 'mcb', name: 'MCB Bank', icon: 'business-outline', color: '#006D38' },
+  { id: 'alfalah', name: 'Bank Alfalah', icon: 'business-outline', color: '#0060A9' },
+  { id: 'faysal', name: 'Faysal Bank', icon: 'business-outline', color: '#004B23' },
+  { id: 'js', name: 'JS Bank', icon: 'business-outline', color: '#C6A200' },
+  { id: 'habibmetro', name: 'Habib Metro Bank', icon: 'business-outline', color: '#204483' },
+  { id: 'sc', name: 'Standard Chartered', icon: 'business-outline', color: '#00853F' },
+  { id: 'bankislami', name: 'Bank Islami', icon: 'business-outline', color: '#007A3D' },
+  { id: 'dib', name: 'Dubai Islamic Bank', icon: 'business-outline', color: '#B8863B' },
+  { id: 'albaraka', name: 'Al Baraka Bank', icon: 'business-outline', color: '#005A30' },
+];
+
+export const wallets: BankOption[] = [
+  { id: 'easypaisa', name: 'Easypaisa', icon: 'wallet-outline', color: '#1C9A45' },
+  { id: 'jazzcash', name: 'JazzCash', icon: 'phone-portrait-outline', color: '#D8232A' },
+  { id: 'sadapay', name: 'SadaPay', icon: 'card-outline', color: '#FF4B2B' },
+  { id: 'nayapay', name: 'NayaPay', icon: 'card-outline', color: '#FE6B01' },
+  { id: 'ublomni', name: 'UBL Omni', icon: 'storefront-outline', color: '#0067B1' },
 ];
 
 export interface ServiceItem {

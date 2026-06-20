@@ -1,13 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../../components/Button';
 import { Card } from '../../components/Card';
 import { PageHeader } from '../../components/PageHeader';
 import { ScreenContainer } from '../../components/ScreenContainer';
 import { TextField } from '../../components/TextField';
-import { paymentMethods } from '../../constants/data';
+import { banks, paymentMethods, wallets } from '../../constants/data';
 import { useAppContext } from '../../context/AppContext';
 import { colors, radius, spacing, typography } from '../../theme';
 
@@ -16,49 +16,36 @@ export default function PaymentDetailsScreen() {
   const method = paymentMethods.find((m) => m.id === pendingPayment.method);
 
   const [amount, setAmount] = useState(pendingPayment.amount);
-  const [accountDetail, setAccountDetail] = useState(pendingPayment.accountDetail);
-  const [extra, setExtra] = useState({ expiry: '', cvv: '' });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [extra, setExtra] = useState<Record<string, string>>(pendingPayment.extraDetails ?? {});
+  const [selectedBank, setSelectedBank] = useState(pendingPayment.accountDetail);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const isCard = method?.id === 'card';
-  const isBank = method?.id === 'bank';
-  const isRaast = method?.id === 'raast';
-  const hasNoAccountField = method?.id === 'qr' || method?.id === 'counter';
+  const isForm = method?.id === 'abs-api' || method?.id === 'create-wallet';
+  const isBankTransfer = method?.id === 'bank-transfer';
+  const isQr = method?.id === 'qr';
 
-  const accountLabel = isBank
-    ? 'Bank Account / IBAN Number'
-    : isCard
-    ? 'Card Number'
-    : isRaast
-    ? 'CNIC or Mobile Number (Raast ID)'
-    : 'Mobile Number';
-
-  const accountPlaceholder = isBank
-    ? 'PK00 BANK 0000 0000 0000 0000'
-    : isCard
-    ? '4242 4242 4242 4242'
-    : isRaast
-    ? '42101-1234567-1 or 03XX-XXXXXXX'
-    : '03XX-XXXXXXX';
+  const setField = (key: string, value: string) =>
+    setExtra((prev) => ({ ...prev, [key]: value }));
 
   const handleNext = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors: Record<string, string> = {};
 
     if (!amount.trim() || isNaN(Number(amount.replace(/,/g, '')))) {
       newErrors.amount = 'Enter a valid amount';
     }
-    if (!hasNoAccountField && !accountDetail.trim()) {
-      newErrors.accountDetail = `Please enter your ${accountLabel.toLowerCase()}`;
+    if (isForm) {
+      if (!extra.name?.trim()) newErrors.name = 'Required';
+      if (!extra.idCard?.trim()) newErrors.idCard = 'Required';
+      if (!extra.phone?.trim()) newErrors.phone = 'Required';
     }
-    if (isCard) {
-      if (!extra.expiry.trim()) newErrors.expiry = 'Required';
-      if (!extra.cvv.trim()) newErrors.cvv = 'Required';
+    if (isBankTransfer && !selectedBank) {
+      newErrors.bank = 'Please select a bank or digital wallet';
     }
 
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    setPendingPayment({ amount, accountDetail });
+    setPendingPayment({ amount, accountDetail: selectedBank, extraDetails: extra });
     router.push('/payment/review');
   };
 
@@ -78,6 +65,77 @@ export default function PaymentDetailsScreen() {
         </View>
       </Card>
 
+      {isForm && (
+        <>
+          <TextField
+            label="Full Name"
+            placeholder="Enter your full name"
+            value={extra.name ?? ''}
+            onChangeText={(v) => setField('name', v)}
+            error={errors.name}
+            leftIcon={<Ionicons name="person-outline" size={18} color={colors.textMuted} />}
+          />
+          <TextField
+            label="ID Card No"
+            placeholder="42101-1234567-1"
+            value={extra.idCard ?? ''}
+            onChangeText={(v) => setField('idCard', v)}
+            error={errors.idCard}
+            keyboardType="numeric"
+            leftIcon={<Ionicons name="id-card-outline" size={18} color={colors.textMuted} />}
+          />
+          <TextField
+            label="Telephone No"
+            placeholder="03XX-XXXXXXX"
+            value={extra.phone ?? ''}
+            onChangeText={(v) => setField('phone', v)}
+            error={errors.phone}
+            keyboardType="phone-pad"
+            leftIcon={<Ionicons name="call-outline" size={18} color={colors.textMuted} />}
+          />
+        </>
+      )}
+
+      {isBankTransfer && (
+        <>
+          <Text style={styles.groupLabel}>Select Bank</Text>
+          {banks.map((b) => (
+            <BankRow
+              key={b.id}
+              name={b.name}
+              icon={b.icon}
+              color={b.color}
+              selected={selectedBank === b.name}
+              onPress={() => setSelectedBank(b.name)}
+            />
+          ))}
+          <Text style={styles.groupLabel}>Select Digital Wallet</Text>
+          {wallets.map((w) => (
+            <BankRow
+              key={w.id}
+              name={w.name}
+              icon={w.icon}
+              color={w.color}
+              selected={selectedBank === w.name}
+              onPress={() => setSelectedBank(w.name)}
+            />
+          ))}
+          {errors.bank ? <Text style={styles.errorText}>{errors.bank}</Text> : null}
+        </>
+      )}
+
+      {isQr && (
+        <View style={styles.qrContainer}>
+          <View style={styles.qrBox}>
+            <Ionicons name="qr-code" size={200} color={colors.primary} />
+          </View>
+          <Text style={styles.qrLabel}>Scan to Pay</Text>
+          <Text style={styles.qrSub}>
+            Open any banking or wallet app, tap Scan QR, and scan this code to complete your payment.
+          </Text>
+        </View>
+      )}
+
       <TextField
         label="Amount (PKR)"
         placeholder="e.g. 15,000"
@@ -87,65 +145,6 @@ export default function PaymentDetailsScreen() {
         keyboardType="numeric"
         leftIcon={<Text style={styles.currencyPrefix}>Rs</Text>}
       />
-
-      {hasNoAccountField ? (
-        <View style={styles.infoNote}>
-          <Ionicons
-            name={method?.id === 'qr' ? 'qr-code-outline' : 'storefront-outline'}
-            size={18}
-            color={colors.primary}
-          />
-          <Text style={styles.infoText}>
-            {method?.id === 'qr'
-              ? 'A QR code will be generated after you confirm. Scan it with any banking or wallet app to complete the payment.'
-              : 'A cash payment voucher will be generated after you confirm. Take it to any Easypaisa shop or UBL branch to complete the payment.'}
-          </Text>
-        </View>
-      ) : (
-        <TextField
-          label={accountLabel}
-          placeholder={accountPlaceholder}
-          value={accountDetail}
-          onChangeText={setAccountDetail}
-          error={errors.accountDetail}
-          keyboardType={isBank || isCard ? 'default' : 'phone-pad'}
-          leftIcon={
-            <Ionicons
-              name={isBank ? 'business-outline' : isCard ? 'card-outline' : isRaast ? 'flash-outline' : 'call-outline'}
-              size={18}
-              color={colors.textMuted}
-            />
-          }
-        />
-      )}
-
-      {isCard && (
-        <View style={styles.row}>
-          <View style={{ flex: 1 }}>
-            <TextField
-              label="Expiry (MM/YY)"
-              placeholder="12/28"
-              value={extra.expiry}
-              onChangeText={(v) => setExtra((e) => ({ ...e, expiry: v }))}
-              error={errors.expiry}
-              keyboardType="numeric"
-              maxLength={5}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <TextField
-              label="CVV"
-              placeholder="123"
-              value={extra.cvv}
-              onChangeText={(v) => setExtra((e) => ({ ...e, cvv: v }))}
-              error={errors.cvv}
-              keyboardType="numeric"
-              maxLength={3}
-              secureTextEntry
-            />
-          </View>
-        </View>
-      )}
 
       <View style={styles.infoNote}>
         <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
@@ -157,6 +156,33 @@ export default function PaymentDetailsScreen() {
 
       <Button label="Continue" onPress={handleNext} style={{ marginTop: spacing.sm }} />
     </ScreenContainer>
+  );
+}
+
+function BankRow({
+  name,
+  icon,
+  color,
+  selected,
+  onPress,
+}: {
+  name: string;
+  icon: React.ComponentProps<typeof Ionicons>['name'];
+  color: string;
+  selected: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      style={[styles.bankRow, selected && styles.bankRowSelected]}
+      onPress={onPress}
+    >
+      <View style={[styles.bankIcon, { backgroundColor: `${color}1A` }]}>
+        <Ionicons name={icon} size={18} color={color} />
+      </View>
+      <Text style={[styles.bankName, selected && styles.bankNameSelected]}>{name}</Text>
+      {selected && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+    </Pressable>
   );
 }
 
@@ -183,13 +209,78 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: 2,
   },
+  groupLabel: {
+    ...typography.small,
+    color: colors.textSecondary,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  bankRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+    marginBottom: spacing.sm,
+  },
+  bankRowSelected: {
+    borderColor: colors.primary,
+    backgroundColor: '#EBF2FA',
+  },
+  bankIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bankName: {
+    ...typography.body,
+    color: colors.textPrimary,
+    flex: 1,
+  },
+  bankNameSelected: {
+    fontWeight: '700',
+    color: colors.primary,
+  },
+  errorText: {
+    ...typography.small,
+    color: colors.danger,
+    marginBottom: spacing.sm,
+  },
+  qrContainer: {
+    alignItems: 'center',
+    paddingVertical: spacing.lg,
+    marginBottom: spacing.md,
+  },
+  qrBox: {
+    padding: spacing.lg,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
+  },
+  qrLabel: {
+    ...typography.h3,
+    color: colors.textPrimary,
+    marginBottom: spacing.xs,
+  },
+  qrSub: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    paddingHorizontal: spacing.lg,
+  },
   currencyPrefix: {
     ...typography.bodyBold,
     color: colors.textSecondary,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: spacing.md,
   },
   infoNote: {
     flexDirection: 'row',

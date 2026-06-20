@@ -1,13 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 
-export type PaymentMethodId =
-  | 'bank'
-  | 'easypaisa'
-  | 'jazzcash'
-  | 'card'
-  | 'qr'
-  | 'raast'
-  | 'counter';
+export type PaymentMethodId = 'abs-api' | 'bank-transfer' | 'qr' | 'create-wallet';
 
 export interface UserProfile {
   fullName: string;
@@ -30,6 +23,7 @@ export interface PendingPayment {
   amount: string;
   method: PaymentMethodId | null;
   accountDetail: string;
+  extraDetails: Record<string, string>;
 }
 
 interface AppContextValue {
@@ -51,6 +45,7 @@ const emptyPendingPayment: PendingPayment = {
   amount: '',
   method: null,
   accountDetail: '',
+  extraDetails: {},
 };
 
 const initialHistory: PaymentRecord[] = [
@@ -58,16 +53,16 @@ const initialHistory: PaymentRecord[] = [
     id: 'TXN-100231',
     service: 'Financial Management Fee',
     amount: '15,000',
-    method: 'easypaisa',
+    method: 'abs-api',
     date: '2026-06-02',
     status: 'success',
-    reference: 'EP-88213940',
+    reference: 'ABS-88213940',
   },
   {
     id: 'TXN-100198',
     service: 'Legal Documentation Service',
     amount: '8,500',
-    method: 'bank',
+    method: 'bank-transfer',
     date: '2026-05-21',
     status: 'success',
     reference: 'BNK-23410988',
@@ -76,10 +71,10 @@ const initialHistory: PaymentRecord[] = [
     id: 'TXN-100177',
     service: 'Business Consulting Retainer',
     amount: '25,000',
-    method: 'jazzcash',
+    method: 'create-wallet',
     date: '2026-05-08',
     status: 'pending',
-    reference: 'JC-77129003',
+    reference: 'WLT-77129003',
   },
 ];
 
